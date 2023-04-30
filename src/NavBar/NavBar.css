@@ -1,0 +1,25 @@
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background-color: #070f2d;
+    color: #ffffff;
+  }
+  
+  .logo img {
+    color: white;
+    padding-left: 8px;
+  }
+  
+  .right button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  

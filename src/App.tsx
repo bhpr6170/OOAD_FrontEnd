@@ -1,26 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-
+import { Route, Router, Routes } from "react-router-dom";
+import LoginForm from './LoginForm/Login';
+import SignIn from './SigninForm/Signin';
+import AddRoom from './AddRoom/AddRoom';
+import BookRoom from './BookRoom/BookRoom';
+import GiveFeedback from './GiveFeedback/GiveFeedback';
+import ViewFeedbacks from './ViewFeedbacks/ViewFeedbacks';
+import ViewMeetings from './ViewMeetings/ViewMeetings';
+import SearchAvailableRooms from './SearchAvailableRooms/SearchAvailableRooms';
+import axios from 'axios';
 function App() {
+  axios.defaults.baseURL = "http://localhost:8080/api"
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  
+      <Routes>
+        <Route path="/" element={<LoginForm></LoginForm>} />
+        <Route path="/login" element={<LoginForm></LoginForm>} />
+        <Route path="/signin" element={<SignIn ></SignIn>} />
+        <Route path="/addRoom" element={<AddRoom></AddRoom>} />
+        <Route path="/bookRoom" element={<BookRoom></BookRoom>} />
+        <Route path="/giveFeedback" element={<GiveFeedback></GiveFeedback>} />
+        <Route path="/viewFeedbacks" element={<ViewFeedbacks></ViewFeedbacks>} />
+        <Route path="/viewMeetings" element={<ViewMeetings></ViewMeetings>} />
+        <Route path="/searchAvailableRooms" element={<SearchAvailableRooms></SearchAvailableRooms>} />
+      </Routes>
+
+    
+);
 }
 
 export default App;

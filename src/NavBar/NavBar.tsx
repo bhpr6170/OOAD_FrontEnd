@@ -17,12 +17,14 @@ const NavBar: React.FC<NavbarProps> = () => {
     const handleSignOut = () => {
         navigate('/');
       };
+
+      
     return (
         <nav>
             <div className="logo">
                 <Button variant="text" onClick={onHome}>
                     <Typography variant="h6" color="white">
-                        RMS
+                        Meeting Scheduler
                     </Typography>
                 </Button>
                 <Button variant="text" onClick={onFeedback}>
@@ -36,6 +38,7 @@ const NavBar: React.FC<NavbarProps> = () => {
             </div>
         </nav>
     );
+     
 };
 
 export default NavBar;

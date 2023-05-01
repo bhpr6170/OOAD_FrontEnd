@@ -9,6 +9,7 @@ import NavBar from '../NavBar/NavBar';
 export const Login  = (props:any) =>{
 const [resData, setResData] = useState({});
 const navigate = useNavigate();
+const [userID, setUserID] = useState<string>();
 
 
 
@@ -36,16 +37,21 @@ const navigate = useNavigate();
 
   
     if(response.ok){
-      if (await response.text() == "\"SUCCESS\"")
+      const uid = await response.text();
+      setUserID(uid);
+      console.log(userID);
+      if (userID == "0")
       {
+        console.log("Login Failure");
+        alert("Username or Password didn't match! Please try again");
+        navigate('/');  
+      }
+      else{
+        
+        console.log(userID);      
         console.log("Login Successful");
         alert("Login Successful!");
         navigate('/searchAvailableRooms');
-      }
-      else{
-        console.log("Login Failure");
-        alert("Username or Password didn't match! Please try again");
-        navigate('/');
       }
     } else {
       console.log("Login API call failed" + response.statusText);

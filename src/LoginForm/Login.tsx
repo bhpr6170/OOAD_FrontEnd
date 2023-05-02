@@ -9,7 +9,6 @@ import NavBar from '../NavBar/NavBar';
 export const Login  = (props:any) =>{
 const [resData, setResData] = useState({});
 const navigate = useNavigate();
-const [userID, setUserID] = useState<string>();
 
 
 
@@ -38,20 +37,18 @@ const [userID, setUserID] = useState<string>();
   
     if(response.ok){
       const uid = await response.text();
-      setUserID(uid);
-      console.log(userID);
-      if (userID == "0")
+      if (uid == "0")
       {
         console.log("Login Failure");
         alert("Username or Password didn't match! Please try again");
         navigate('/');  
       }
       else{
-        
-        console.log(userID);      
+        localStorage.setItem('userId', JSON.stringify(uid));
+        console.log("User ID " + localStorage.getItem('userId'));      
         console.log("Login Successful");
         alert("Login Successful!");
-        navigate('/searchAvailableRooms');
+        navigate('/dashboard');
       }
     } else {
       console.log("Login API call failed" + response.statusText);
@@ -62,6 +59,7 @@ const [userID, setUserID] = useState<string>();
 
   return (
    
+    // <div className='all-container'>
       <div className='wrapper'>
         <div className='form-wrapper'>
            <h2>Login</h2>
@@ -86,6 +84,7 @@ const [userID, setUserID] = useState<string>();
      </div>
      
   </div>
+  // </div>
   );
 }
 

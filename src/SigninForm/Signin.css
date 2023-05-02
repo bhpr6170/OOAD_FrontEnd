@@ -3,13 +3,13 @@ p, div {
   }
     
   .wrapper {
-    height: 97vh;
+    height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgb(6, 150, 30);
+    background-color: rgb(223, 223, 223);
   }
   
   .form-wrapper {

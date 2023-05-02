@@ -1,24 +1,46 @@
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
 import "./NavBar.css"
 
-interface NavbarProps {}
+interface NavbarProps { }
 
 const NavBar: React.FC<NavbarProps> = () => {
     const navigate = useNavigate();
+    
     const onHome = () => {
         navigate('/searchAvailableRooms');
     };
+
     const onFeedback = () => {
         navigate('/giveFeedback');
     };
+
     const handleSignOut = () => {
         navigate('/');
-      };
+    };
 
-      
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const userInfo = {
+        name: "Balloon"
+    }
+
+
     return (
         <nav>
             <div className="logo">
@@ -27,18 +49,25 @@ const NavBar: React.FC<NavbarProps> = () => {
                         Meeting Scheduler
                     </Typography>
                 </Button>
-                <Button variant="text" onClick={onFeedback}>
-                    <Typography variant="h6" color="white">
-                        Feedback
-                    </Typography>
-                </Button>
             </div>
-            <div className="right">
-                <button onClick={handleSignOut}>Sign Out</button>
+            <div>
+                <div className='action-btn'>
+                    <Button className="feedback-btn" onClick={onFeedback}>Feedback</Button>
+                    {/* <button className="sigout-btn" onClick={handleSignOut}>Sign Out</button> */}
+                    <Button onClick={handleMenuOpen}>
+                        <Avatar><PersonIcon /></Avatar>
+                    </Button><Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+                        <MenuItem>{userInfo?.name}</MenuItem>
+                        <MenuItem onClick={handleSignOut}>
+                            <span style={{ marginRight: "16px" }}>Logout</span>
+                            <LogoutIcon />
+                        </MenuItem>
+                    </Menu>
+                </div>
             </div>
         </nav>
     );
-     
+
 };
 
 export default NavBar;

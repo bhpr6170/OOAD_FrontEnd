@@ -1,7 +1,8 @@
 .all-container {
     display: flex;
     flex-flow: column;
-    min-height: fit-content;
+    height: fit-content ;
+    min-height: 100vh;
     background: linear-gradient(-45deg, #1a3d00, #19beff, #9a2eff, #ffe44b);
     background-size: 400% 400%;
     -webkit-animation: Gradient 10s ease infinite;
@@ -101,11 +102,18 @@
 
 .searchButton {
     margin: 16px;
-    width: 20rem;
+    width: 18rem;
 }
 
 .search-btn {
     font-size: 16px !important;
+}
+
+.addRoomButton{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    margin-right: 16px;
 }
 
 .indiv-time-container {

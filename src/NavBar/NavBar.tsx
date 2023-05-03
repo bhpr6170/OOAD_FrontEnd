@@ -15,7 +15,7 @@ const NavBar: React.FC<NavbarProps> = () => {
     const navigate = useNavigate();
     
     const onHome = () => {
-        navigate('/searchAvailableRooms');
+        navigate('/dashboard');
     };
 
     const onFeedback = () => {

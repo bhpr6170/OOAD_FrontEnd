@@ -19,12 +19,14 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import dayjs, { Dayjs } from "dayjs";
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import './Dashboard.css';
+import AddIcon from '@mui/icons-material/Add';
 import MeetingRoomCard from '../MeetingCard/MeetingRoomCard';
 import format from 'date-fns/format';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Bookings from '../Bookings/Bookings';
 import { SelectProvider } from '@mui/base';
+import { useNavigate } from "react-router-dom";
 
 interface LinkTabProps {
     label?: string;
@@ -35,6 +37,7 @@ interface LinkTabProps {
 
 function Dashboard() {
     const [value, setValue] = React.useState('1');
+    const navigate = useNavigate();
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
@@ -47,7 +50,7 @@ function Dashboard() {
     const [checkInTime, setcheckInTime] = useState<Dayjs | null>(dayjs());
 
     const [checkOutTime, setcheckOutTime] = useState<Dayjs | null>(dayjs());
-    
+
     const [checkInDateString, setCheckInDateString] = useState<string>("");
     const [checkInTimeString, setCheckInTimeString] = useState<string>("");
     const [checkOutTimeString, setCheckOutTimeString] = useState<string>("");
@@ -56,13 +59,15 @@ function Dashboard() {
         setCheckInDate(date);
     };
 
+    const handleAddRoomClick = async () => {
+        navigate('/addRoom');
+    }
     const handleSearchClick = async () => {
-        if (checkInDate != null  && checkInTime != null && checkOutTime != null)
-        {
+        if (checkInDate != null && checkInTime != null && checkOutTime != null) {
             setCheckInDateString(checkInDate.format('DD-MM-YYYY'));
             setCheckInTimeString(checkInTime.format('HH:mm'));
             setCheckOutTimeString(checkOutTime.format('HH:mm'));
-            const response = await fetch('http://localhost:8080/api/meetings/'+checkInDate.format('DD-MM-YYYY')+'/'+checkInTime.format('HH:mm')+'/'+checkOutTime.format('HH:mm'), {
+            const response = await fetch('http://localhost:8080/api/meetings/' + checkInDate.format('DD-MM-YYYY') + '/' + checkInTime.format('HH:mm') + '/' + checkOutTime.format('HH:mm'), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,19 +75,18 @@ function Dashboard() {
                 mode: 'cors'
             });
 
-            if(response.ok)
-            {
+            if (response.ok) {
                 var searchResponse = await response.text();
-                searchResponse = searchResponse.substring(1,searchResponse.length-1);
+                searchResponse = searchResponse.substring(1, searchResponse.length - 1);
                 var roomsList = searchResponse.split(',');
                 var roomsTemp: { id: number; name: string; }[] = [];
                 roomsList.forEach(element => {
-                    roomsTemp.push({id: parseInt(element), name: 'Room ' + element});
+                    roomsTemp.push({ id: parseInt(element), name: 'Room ' + element });
                 });
                 setRooms(roomsTemp);
                 console.log(rooms);
             }
-            else{
+            else {
                 console.log("API Error:" + response);
             }
         }
@@ -150,6 +154,18 @@ function Dashboard() {
                     </div>
                 </div>
 
+                <div className="addRoomButton">
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        onClick={handleAddRoomClick}
+                        className='addroom-btn'
+                    >
+                        Add Rooms
+                    </Button>
+                </div>
+
                 <div className='tab-container'>
                     <Box sx={{ width: '100%', typography: 'body1', borderRadius: "12px", border: "4px" }}>
                         <TabContext value={value}>
@@ -164,7 +180,7 @@ function Dashboard() {
                                     {rooms.map((room: any) => (
                                         <Grid item xs={6} sm={4} md={3} key={room.id}>
                                             <Paper sx={{ p: 2, backgroundColor: "tomato", minHeight: "fit-content" }}>
-                                                <MeetingRoomCard id = {room.id} name={room.name} date={checkInDateString} checkin={checkInTimeString} checkout={checkOutTimeString} />
+                                                <MeetingRoomCard id={room.id} name={room.name} date={checkInDateString} checkin={checkInTimeString} checkout={checkOutTimeString} />
                                             </Paper>
                                         </Grid>
                                     ))}

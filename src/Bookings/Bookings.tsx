@@ -42,16 +42,6 @@ function createData(
   return { name, date, checkin, checkout, addons };
 }
 
-// const rows = [
-//   createData("Room1", "04/20/2023", "12:00", "15:00", ["Projector"]),
-//   createData("Room2", "04/20/2023", "12:00", "19:00", ["Air Conditioning"]),
-//   createData("Room3", "04/21/2023", "12:00", "15:00", ["Snacks", "Beverages"]),
-//   createData("Room1", "04/20/2023", "12:00", "15:00", ["Snacks"]),
-//   createData("Room5", "04/22/2023", "16:00", "15:00", ["Beverages"]),
-//   createData("Room7", "04/28/2023", "16:10", "15:00", ["Projector"]),
-//   createData("Room2", "04/29/2023", "12:00", "15:00", ["Air Conditioning"]),
-//   createData("Room1", "04/30/2023", "12:00", "15:00", ["Air Conditioning"])
-// ];
 
 function Bookings() {
 
@@ -81,15 +71,7 @@ function Bookings() {
                   rowsTemp.push(createData("Room "+ element['roomId'], element['date'], element['startTime'], element['endTime'], element['addons'].split(',')));
                 });
                 setRows(rowsTemp);
-                console.log(searchResponse[0]['date']);
-                // searchResponse = searchResponse.substring(1,searchResponse.length-1);
-                // var roomsList = searchResponse.split(',');
-                // var roomsTemp: { id: number; name: string; }[] = [];
-                // roomsList.forEach(element => {
-                //     roomsTemp.push({id: parseInt(element), name: 'Room ' + element});
-                // });
-                // setRows();
-                // console.log(rooms);
+          
             }
             else{
                 console.log("API Error:" + response);

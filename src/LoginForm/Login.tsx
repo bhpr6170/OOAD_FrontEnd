@@ -44,7 +44,7 @@ const navigate = useNavigate();
         navigate('/');  
       }
       else{
-        localStorage.setItem('userId', JSON.stringify(uid));
+        localStorage.setItem('userId', uid);
         console.log("User ID " + localStorage.getItem('userId'));      
         console.log("Login Successful");
         alert("Login Successful!");

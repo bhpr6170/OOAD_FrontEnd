@@ -15,7 +15,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { Dayjs } from 'dayjs';
+//import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from "dayjs";
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import './Dashboard.css';
 import MeetingRoomCard from '../MeetingCard/MeetingRoomCard';
@@ -23,20 +24,14 @@ import format from 'date-fns/format';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Bookings from '../Bookings/Bookings';
+import { SelectProvider } from '@mui/base';
 
 interface LinkTabProps {
     label?: string;
     href?: string;
 }
 
-const rooms = [
-    { id: 1, name: 'Room 1' },
-    { id: 2, name: 'Room 2' },
-    { id: 3, name: 'Room 3' },
-    { id: 4, name: 'Room 4' },
-    { id: 5, name: 'Room 5' },
-    { id: 6, name: 'Room 6' },
-];
+
 
 function Dashboard() {
     const [value, setValue] = React.useState('1');
@@ -45,36 +40,52 @@ function Dashboard() {
         setValue(newValue);
     };
 
-    const [checkInDate, setCheckInDate] = useState<Dayjs | null>();
-    const [checkinDateString,setCheckInDateString] = useState<string>(""); 
+    const [rooms, setRooms] = React.useState<{ id: number; name: string }[]>([]);
 
-    const [checkInTime, setcheckInTime] = useState<Dayjs | null>();
-    const [checkinTimeString,setCheckInTimeString] = useState<string>(""); 
+    const [checkInDate, setCheckInDate] = useState<Dayjs | null>(dayjs());
 
-    const [checkOutTime, setcheckOutTime] = useState<Dayjs | null>();
-    const [checkOutTimeString,setCheckOutTimeString] = useState<string>(""); 
+    const [checkInTime, setcheckInTime] = useState<Dayjs | null>(dayjs());
+
+    const [checkOutTime, setcheckOutTime] = useState<Dayjs | null>(dayjs());
+    
+    const [checkInDateString, setCheckInDateString] = useState<string>("");
+    const [checkInTimeString, setCheckInTimeString] = useState<string>("");
+    const [checkOutTimeString, setCheckOutTimeString] = useState<string>("");
 
     const handleCheckInDateChange = (date: any) => {
-        // const formattedCheckInDate = format(checkInDate, 'yyyy-MM-dd');
         setCheckInDate(date);
-        //onsole.log(date);
     };
 
-    const handleSearchClick = () => {
+    const handleSearchClick = async () => {
         if (checkInDate != null  && checkInTime != null && checkOutTime != null)
         {
             setCheckInDateString(checkInDate.format('DD-MM-YYYY'));
-            console.log(checkinDateString);
             setCheckInTimeString(checkInTime.format('HH:mm'));
             setCheckOutTimeString(checkOutTime.format('HH:mm'));
-            console.log(checkinTimeString);
-            console.log(checkOutTimeString);
-        }
-        
+            const response = await fetch('http://localhost:8080/api/meetings/'+checkInDate.format('DD-MM-YYYY')+'/'+checkInTime.format('HH:mm')+'/'+checkOutTime.format('HH:mm'), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors'
+            });
 
-        // const formattedCheckInDate = format(checkInDate, 'yyyy-MM-dd');
-        // const formattedCheckOutDate = format(checkOutDate, 'yyyy-MM-dd');
-        // console.log(`Searching for availability between ${formattedCheckInDate} and ${formattedCheckOutDate}`);
+            if(response.ok)
+            {
+                var searchResponse = await response.text();
+                searchResponse = searchResponse.substring(1,searchResponse.length-1);
+                var roomsList = searchResponse.split(',');
+                var roomsTemp: { id: number; name: string; }[] = [];
+                roomsList.forEach(element => {
+                    roomsTemp.push({id: parseInt(element), name: 'Room ' + element});
+                });
+                setRooms(roomsTemp);
+                console.log(rooms);
+            }
+            else{
+                console.log("API Error:" + response);
+            }
+        }
     };
 
     return (
@@ -138,6 +149,7 @@ function Dashboard() {
                         </Card>
                     </div>
                 </div>
+
                 <div className='tab-container'>
                     <Box sx={{ width: '100%', typography: 'body1', borderRadius: "12px", border: "4px" }}>
                         <TabContext value={value}>
@@ -152,14 +164,14 @@ function Dashboard() {
                                     {rooms.map((room: any) => (
                                         <Grid item xs={6} sm={4} md={3} key={room.id}>
                                             <Paper sx={{ p: 2, backgroundColor: "tomato", minHeight: "fit-content" }}>
-                                                <MeetingRoomCard name={room.name} date={"checkInDate"} checkin={''} checkout={''} />
+                                                <MeetingRoomCard id = {room.id} name={room.name} date={checkInDateString} checkin={checkInTimeString} checkout={checkOutTimeString} />
                                             </Paper>
                                         </Grid>
                                     ))}
                                 </Grid>
                             </TabPanel>
                             <TabPanel value="2">
-                                <Bookings />
+                                <Bookings></Bookings>
                             </TabPanel>
                         </TabContext>
                     </Box>

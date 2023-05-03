@@ -6,8 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useState, useEffect } from "react";
 import './Bookings.css';
 import Chip from '@mui/material/Chip';
+import React from 'react';
+import { Book } from '@mui/icons-material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,18 +42,62 @@ function createData(
   return { name, date, checkin, checkout, addons };
 }
 
-const rows = [
-  createData("Room1", "04/20/2023", "12:00", "15:00", ["Projector"]),
-  createData("Room2", "04/20/2023", "12:00", "19:00", ["Air Conditioning"]),
-  createData("Room3", "04/21/2023", "12:00", "15:00", ["Snacks", "Beverages"]),
-  createData("Room1", "04/20/2023", "12:00", "15:00", ["Snacks"]),
-  createData("Room5", "04/22/2023", "16:00", "15:00", ["Beverages"]),
-  createData("Room7", "04/28/2023", "16:10", "15:00", ["Projector"]),
-  createData("Room2", "04/29/2023", "12:00", "15:00", ["Air Conditioning"]),
-  createData("Room1", "04/30/2023", "12:00", "15:00", ["Air Conditioning"])
-];
+// const rows = [
+//   createData("Room1", "04/20/2023", "12:00", "15:00", ["Projector"]),
+//   createData("Room2", "04/20/2023", "12:00", "19:00", ["Air Conditioning"]),
+//   createData("Room3", "04/21/2023", "12:00", "15:00", ["Snacks", "Beverages"]),
+//   createData("Room1", "04/20/2023", "12:00", "15:00", ["Snacks"]),
+//   createData("Room5", "04/22/2023", "16:00", "15:00", ["Beverages"]),
+//   createData("Room7", "04/28/2023", "16:10", "15:00", ["Projector"]),
+//   createData("Room2", "04/29/2023", "12:00", "15:00", ["Air Conditioning"]),
+//   createData("Room1", "04/30/2023", "12:00", "15:00", ["Air Conditioning"])
+// ];
 
-export default function Bookings() {
+function Bookings() {
+
+  const [rows, setRows] = React.useState<{name: string, date: string, checkin: string, checkout: string, addons: string[]}[]>([]);
+  const [userId, setUserID] = useState<string | null>('');
+  var response;
+
+  useEffect(() => {
+    setUserID(window.localStorage.getItem('userId'))
+  }, []);
+
+  (async () => {
+    console.log(userId);
+    response = await fetch(`http://localhost:8080/api/meeting/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors'
+            });
+
+            if(response.ok)
+            {
+                var rowsTemp: { name: string; date: string; checkin: string; checkout: string; addons: string[] }[] = [];
+                var searchResponse = await response.json();
+                searchResponse.forEach((element: {addons: string, date: string, endTime: string, meetingId: string, roomId: number, startTime: string, userId: number}) => { 
+                  rowsTemp.push(createData("Room "+ element['roomId'], element['date'], element['startTime'], element['endTime'], element['addons'].split(',')));
+                });
+                setRows(rowsTemp);
+                console.log(searchResponse[0]['date']);
+                // searchResponse = searchResponse.substring(1,searchResponse.length-1);
+                // var roomsList = searchResponse.split(',');
+                // var roomsTemp: { id: number; name: string; }[] = [];
+                // roomsList.forEach(element => {
+                //     roomsTemp.push({id: parseInt(element), name: 'Room ' + element});
+                // });
+                // setRows();
+                // console.log(rooms);
+            }
+            else{
+                console.log("API Error:" + response);
+            }
+})();
+  
+
+            
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -86,3 +133,4 @@ export default function Bookings() {
     </TableContainer>
   );
 }
+export default Bookings;

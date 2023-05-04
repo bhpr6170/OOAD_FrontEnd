@@ -181,7 +181,7 @@ function Dashboard() {
                                 <Grid container spacing={2}>
                                     {rooms.map((room: any) => (
                                         <Grid item xs={6} sm={4} md={3} key={room.id}>
-                                            <Paper sx={{ p: 2, backgroundColor: "tomato", minHeight: "fit-content" }}>
+                                            <Paper sx={{ p: 2, backgroundColor: "#bbf9fa", minHeight: "fit-content" }}>
                                                 <MeetingRoomCard id={room.id} name={room.name} date={checkInDateString} checkin={checkInTimeString} checkout={checkOutTimeString} />
                                             </Paper>
                                         </Grid>

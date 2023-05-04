@@ -54,8 +54,12 @@ const NavBar: React.FC<NavbarProps> = () => {
             </div>
             <div>
                 <div className='action-btn'>
+
+                { localStorage.getItem('userType') == "ADMIN"?
                     <Button className="feedback-btn" onClick={onFeedback}>Feedback</Button>
-                    {/* <button className="sigout-btn" onClick={handleSignOut}>Sign Out</button> */}
+                 : null}
+                    
+                   
                     <Button onClick={handleMenuOpen}>
                         <Avatar><PersonIcon /></Avatar>
                     </Button><Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>

@@ -153,18 +153,20 @@ function Dashboard() {
                         </Card>
                     </div>
                 </div>
-
+                
+                { localStorage.getItem('userType') == "ADMIN"?
                 <div className="addRoomButton">
                     <Button
-                        variant="outlined"
-                        color="primary"
+                        variant="contained"
+                        color="success"
                         startIcon={<AddIcon />}
                         onClick={handleAddRoomClick}
                         className='addroom-btn'
                     >
                         Add Rooms
                     </Button>
-                </div>
+                </div> : null}
+                
 
                 <div className='tab-container'>
                     <Box sx={{ width: '100%', typography: 'body1', borderRadius: "12px", border: "4px" }}>

@@ -45,7 +45,22 @@ const navigate = useNavigate();
       }
       else{
         localStorage.setItem('userId', uid);
-        console.log("User ID " + localStorage.getItem('userId'));      
+        console.log("User ID " + localStorage.getItem('userId')); 
+        
+        const responseForUser = await fetch(`http://localhost:8080/api/users/${uid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            mode: 'cors'
+        });
+
+        const responseForUserJson = await responseForUser.json();
+        localStorage.setItem('userType', responseForUserJson['type']);
+        console.log("User Type "+localStorage.getItem('userType'));
+        localStorage.setItem('userName', responseForUserJson['name']);
+        console.log("User Name "+localStorage.getItem('userName'));
+
         console.log("Login Successful");
         alert("Login Successful!");
         navigate('/dashboard');

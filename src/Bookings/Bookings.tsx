@@ -11,6 +11,9 @@ import './Bookings.css';
 import Chip from '@mui/material/Chip';
 import React from 'react';
 import { Book } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,19 +36,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function createData(
+  meetingId:string,
   name: string,
   date: string,
   checkin: string,
   checkout: string,
   addons: string[],
 ) {
-  return { name, date, checkin, checkout, addons };
+  return { meetingId,name, date, checkin, checkout, addons };
 }
 
 
 function Bookings() {
+  const navigate = useNavigate();
 
-  const [rows, setRows] = React.useState<{name: string, date: string, checkin: string, checkout: string, addons: string[]}[]>([]);
+  const [rows, setRows] = React.useState<{ meetingId:string ,name: string, date: string, checkin: string, checkout: string, addons: string[]}[]>([]);
   const [userId, setUserID] = useState<string | null>('');
   var response;
 
@@ -65,10 +70,10 @@ function Bookings() {
 
             if(response.ok)
             {
-                var rowsTemp: { name: string; date: string; checkin: string; checkout: string; addons: string[] }[] = [];
+                var rowsTemp: { meetingId:string; name: string; date: string; checkin: string; checkout: string; addons: string[] }[] = [];
                 var searchResponse = await response.json();
                 searchResponse.forEach((element: {addons: string, date: string, endTime: string, meetingId: string, roomId: number, startTime: string, userId: number}) => { 
-                  rowsTemp.push(createData("Room "+ element['roomId'], element['date'], element['startTime'], element['endTime'], element['addons'].split(',')));
+                  rowsTemp.push(createData(element['meetingId'] , "Room "+ element['roomId'], element['date'], element['startTime'], element['endTime'], element['addons'].split(',')));
                 });
                 setRows(rowsTemp);
           
@@ -78,6 +83,14 @@ function Bookings() {
             }
 })();
   
+// const handleGiveFeedbackClick(meetingId:string) = async () => {
+//   alert(`$meetingId`);
+// }
+
+function handleGiveFeedbackClick(meetingId: string) {
+  localStorage.setItem('meetingId', meetingId);
+  navigate('/giveFeedback');  
+}
 
             
   return (
@@ -90,6 +103,7 @@ function Bookings() {
             <StyledTableCell align="center">Check In</StyledTableCell>
             <StyledTableCell align="center">Check Out</StyledTableCell>
             <StyledTableCell align="center">Add Ons</StyledTableCell>
+            <StyledTableCell align="center">Feedback</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -108,6 +122,21 @@ function Bookings() {
                   );
                 })}
               </StyledTableCell>
+              <StyledTableCell align="center">{
+                
+                <div className="giveFeedback">
+                <Button
+                   
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleGiveFeedbackClick(row.meetingId)}
+                    className='giveFeedback-btn'
+                >
+                    Give Feedback
+                </Button>
+            </div>
+                
+              }</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

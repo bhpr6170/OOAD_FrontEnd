@@ -19,8 +19,10 @@ const NavBar: React.FC<NavbarProps> = () => {
     };
 
     const onFeedback = () => {
-        navigate('/giveFeedback');
+        navigate('/viewFeedbacks');
     };
+
+   
 
     const handleSignOut = () => {
         navigate('/');
@@ -57,7 +59,7 @@ const NavBar: React.FC<NavbarProps> = () => {
                     <Button onClick={handleMenuOpen}>
                         <Avatar><PersonIcon /></Avatar>
                     </Button><Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                        <MenuItem>{userInfo?.name}</MenuItem>
+                        <MenuItem>{localStorage.getItem('userName')}</MenuItem>
                         <MenuItem onClick={handleSignOut}>
                             <span style={{ marginRight: "16px" }}>Logout</span>
                             <LogoutIcon />

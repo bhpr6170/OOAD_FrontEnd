@@ -8,7 +8,9 @@ import { Rating, Typography } from '@mui/material';
 // https://hirukarunathilaka.medium.com/signup-form-with-real-time-validation-using-react-typescript-6a7dfb3122b5
 
 export const GiveFeedback  = (props:any) =>{
-const [resData, setResData] = useState({});
+
+const meetingId = localStorage.getItem('meetingId');
+const [resData, setResData] = useState({meeting_id: meetingId});
 const navigate = useNavigate();
 
 
@@ -54,7 +56,8 @@ const navigate = useNavigate();
            <form onSubmit={handleSubmit} noValidate >
               <div className='meeting_id'>
                  <label htmlFor="meeting_id">Meeting Number</label>
-                 <input type='number' name='meeting_id' onBlur={handleChange}/>
+                 {/* <label htmlFor="meeting_id">{meetingId}</label> */}
+                 <input type='number' name='meeting_id' readOnly={true} defaultValue = {meetingId?meetingId:"0"} onBlur={handleChange}/>
               </div>
               <div className='rating'>
                  <label htmlFor="rating">Rating</label>
